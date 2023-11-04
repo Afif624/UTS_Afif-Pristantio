@@ -1,11 +1,20 @@
+.fa-moon{
+    display: none;
+}
+
 .navbar .nav-link.active {
-    background-color: #007BFF; /* Warna latar belakang untuk tautan aktif */
-    color: #fff; /* Warna teks untuk tautan aktif */
+    background-color: #007BFF; 
+    color: #fff; 
 }
 
 .navbar .nav-link:hover {
-    background-color: #0056b3; /* Warna latar belakang saat tautan diarahkan cursor */
-    color: #fff; /* Warna teks saat tautan diarahkan cursor */
+    background-color: #0056b3; 
+    color: #fff;
+}
+
+.dark-mode-toggle:hover {
+    background-color: #0056b3; 
+    color: #fff; 
 }
 
 /* CSS untuk layar kecil */
@@ -46,27 +55,4 @@
     .dark-mode-toggle {
         order: 3;
     }
-}
-
-.fa-moon{
-    display: none;
-}
-
-/* Gaya awal border toggler */
-.navbar-toggler,
-.dark-mode-toggle {
-    border: 1px solid #000; /* Warna border default */
-    border-radius: 5px; /* Menambahkan sudut melengkung pada border */
-}
-
-/* Gaya border toggler dalam mode gelap */
-body[data-bs-theme="dark"] .navbar-toggler,
-body[data-bs-theme="dark"] .dark-mode-toggle {
-    border: 1px solid #FFF; /* Warna border saat mode gelap */
-}
-
-/* Gaya border toggler ketika dihover */
-.navbar-toggler:hover,
-.dark-mode-toggle:hover {
-    border: 1px solid #007BFF; /* Warna border saat dihover */
 }
