@@ -8,15 +8,21 @@ session_start();
 if (isset($_POST['submit'])) {
     $email = $_POST['email'];
     $password = md5($_POST['password']);
-    $sql = "SELECT * FROM users WHERE email='$email' AND password='$password'";
-    $result = mysqli_query($mysqli, $sql);
-    if ($result->num_rows > 0) {
-        $row = mysqli_fetch_assoc($result);
-        $_SESSION['username'] = $row['username'];
-        $_SESSION['email'] = $row['email'];
-        header("Location: index.php");
+    $sql1 = "SELECT * FROM users WHERE email='$email'";
+    $result1 = mysqli_query($mysqli, $sql1);
+    if ($result1->num_rows > 0) {
+        $sql2 = "SELECT * FROM users WHERE password='$password'";
+        $result2 = mysqli_query($mysqli, $sql2);
+        if ($result2->num_rows > 0) {
+            $row = mysqli_fetch_assoc($result2);
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['email'] = $row['email'];
+            header("Location: index.php");
+        } else {
+            echo "<script>alert('Password Anda salah. Silahkan coba lagi!')</script>";
+        }
     } else {
-        echo "<script>alert('Email atau password Anda salah. Silahkan coba lagi!')</script>";
+        echo "<script>alert('Email Anda salah. Silahkan coba lagi!')</script>";
     }
 }
  
@@ -67,15 +73,15 @@ if (isset($_POST['submit'])) {
     </nav>
 
     <div class="container mt-5 mb-3" style="max-width: 50vw;">
-        <form action="" method="POST">
+        <form class="form-floating" action="" method="POST" name="myForm">
             <h2 class="text-center">Login</h2>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo $email; ?>" required>
+            <div class="form-floating mb-3">
+                <input id="floatingInput" type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                <label for="floatingInput">Email</label>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" value="<?php echo $_POST['password']; ?>" required>
+            <div class="form-floating mb-3">
+                <input id="floatingInput" type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                <label for="floatingInput">Password</label>
             </div>
             <div class="mb-3 text-center">
                 <button type="submit" name="submit" class="btn btn-primary btn-block">Login Now</button>

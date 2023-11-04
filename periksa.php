@@ -14,24 +14,30 @@ if (isset($_POST['save'])){
     $idDokter = $_POST['idDokter'];
     $tanggal = $_POST['tanggal'];
     $catatan = $_POST['catatan'];
+    $obat = $_POST['obat'];
     if (!empty($idPasien)){
         if (!empty($idDokter)){
             if (!empty($tanggal)){
                 if (!empty($catatan)){
-                    if (!empty($_POST['id'])){
-                        $id_baru = $_POST['id'];
-                        $queri1 = mysqli_query($mysqli, "UPDATE periksa SET 
-                            id_pasien='$idPasien',
-                            id_dokter='$idDokter',
-                            tgl_periksa='$tanggal', 
-                            catatan='$catatan' WHERE id='$id_baru'");
-                    } else {
-                        $queri2 = mysqli_query($mysqli, "INSERT INTO 
-                            periksa(id_pasien,id_dokter,tgl_periksa,catatan) VALUES(
-                                '$idPasien','$idDokter','$tanggal','$catatan')");
+                    if (!empty($obat)){
+                        if (!empty($_POST['id'])){
+                            $id_baru = $_POST['id'];
+                            $queri1 = mysqli_query($mysqli, "UPDATE periksa SET 
+                                id_pasien='$idPasien',
+                                id_dokter='$idDokter',
+                                tgl_periksa='$tanggal', 
+                                catatan='$catatan',
+                                obat='$obat' WHERE id='$id_baru'");
+                        } else {
+                            $queri2 = mysqli_query($mysqli, "INSERT INTO 
+                                periksa(id_pasien,id_dokter,tgl_periksa,catatan,obat) VALUES(
+                                    '$idPasien','$idDokter','$tanggal','$catatan','$obat')");
+                        }
+                        header("Location: periksa.php"); 
+                        exit(); 
+                    } else{
+                        echo "<script>alert('Silakan lengkapi Obat!')</script>";
                     }
-                    header("Location: periksa.php"); 
-                    exit(); 
                 } else{
                     echo "<script>alert('Silakan lengkapi Catatan!')</script>";
                 }
@@ -171,6 +177,11 @@ if (isset($_GET['aksi'])){
                     placeholder="Catatan" value="<?php echo $catatan ?>">
                 <label for="floatingInput">Catatan</label>
             </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="floatingInput" name="obat" 
+                    placeholder="Obat" value="<?php echo $obat ?>">
+                <label for="floatingInput">Obat</label>
+            </div>
             <button type="submit" class="btn btn-primary rounded-pill px-3" name="save">Simpan</button>
         </form>
 
@@ -191,6 +202,7 @@ if (isset($_GET['aksi'])){
                         <th scope="col">Dokter</th>
                         <th scope="col">Tanggal Periksa</th>
                         <th scope="col">Catatan</th>
+                        <th scope="col">Obat</th>
                         <th scope="col">Aksi</th>
                     </tr>
                 </thead>
@@ -204,6 +216,7 @@ if (isset($_GET['aksi'])){
                             <td><?php echo $rowperiksa['dokter'] ?></td>
                             <td><?php echo $rowperiksa['tgl_periksa'] ?></td>
                             <td><?php echo $rowperiksa['catatan'] ?></td>
+                            <td><?php echo $rowperiksa['obat'] ?></td>
                             <td>
                                 <a class="btn btn-info rounded-pill px-3" 
                                     href="periksa.php?id=<?php echo $rowperiksa['id'] ?>">Ubah</a>

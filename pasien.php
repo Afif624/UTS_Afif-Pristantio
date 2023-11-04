@@ -51,7 +51,7 @@ if (isset($_GET['aksi'])) {
         } else {
             $queri5 = mysqli_query($mysqli, "DELETE FROM pasien
                 WHERE id='$id'");
-            header("Location: dokter.php");
+            header("Location: pasien.php");
             exit();
         }
     }

@@ -12,10 +12,10 @@ if (isset($_POST['submit'])) {
     $cpassword = md5($_POST['cpassword']);
  
     if ($password == $cpassword) {
-        $sql1 = "SELECT * FROM users WHERE email='$email'";
+        $sql1 = "SELECT * FROM users WHERE username='$username'";
         $result1 = mysqli_query($mysqli, $sql1);
         if (!$result1->num_rows > 0) {
-            $sql2 = "SELECT * FROM users WHERE username='$username'";
+            $sql2 = "SELECT * FROM users WHERE email='$email'";
             $result2 = mysqli_query($mysqli, $sql2);
             if (!$result2->num_rows > 0) {
                 $sql3 = "INSERT INTO users (username, email, password)
@@ -31,10 +31,10 @@ if (isset($_POST['submit'])) {
                     echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
                 }
             } else {
-                echo "<script>alert('Woops! Username Sudah Terdaftar.')</script>";
+                echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
             }
         } else {
-            echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
+            echo "<script>alert('Woops! Username Sudah Terdaftar.')</script>";
         }
     } else {
         echo "<script>alert('Password Dan Confirm Password Tidak Sama')</script>";
@@ -88,23 +88,23 @@ if (isset($_POST['submit'])) {
     </nav>
 
     <div class="container mt-5 mb-3" style="max-width: 50vw;">
-        <form action="" method="POST">
+        <form class="form-floating" action="" method="POST" name="myForm">
             <h2 class="text-center">Register</h2>
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" id="username" name="username" value="<?php echo $username; ?>" required>
+            <div class="form-floating mb-3">
+                <input id="floatingInput" type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                <label for="floatingInput">Username</label>
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="<?php echo $email; ?>" required>
+            <div class="form-floating mb-3">
+                <input id="floatingInput" type="email" class="form-control" id="email" name="email" placeholder="Email" required>
+                <label for="floatingInput">Email</label>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password" value="<?php echo $_POST['password']; ?>" required>
+            <div class="form-floating mb-3">
+                <input id="floatingInput" type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                <label for="floatingInput">Password</label>
             </div>
-            <div class="mb-3">
-                <label for="cpassword" class="form-label">Ulang Password</label>
-                <input type="password" class="form-control" id="cpassword" name="cpassword" value="<?php echo $_POST['cpassword']; ?>" required>
+            <div class="form-floating mb-3">
+                <input id="floatingInput" type="password" class="form-control" id="cpassword" name="cpassword" placeholder="Ulang Password" required>
+                <label for="floatingInput">Ulang Password</label>
             </div>
             <div class="mb-3 text-center">
                 <button type="submit" name="submit" class="btn btn-primary btn-block">Register Now</button> <!-- Menambahkan kelas btn-block untuk tombol agar mengisi lebar form -->

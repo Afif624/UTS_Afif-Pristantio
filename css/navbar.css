@@ -1,20 +1,23 @@
 .fa-moon{
     display: none;
 }
-
-.navbar .nav-link.active {
-    background-color: #007BFF; 
-    color: #fff; 
+.navbar-toggler {
+    border: solid 2px;
 }
-
-.navbar .nav-link:hover {
-    background-color: #0056b3; 
-    color: #fff;
+.dark-mode-toggle {
+    border: solid 2px;
 }
-
 .dark-mode-toggle:hover {
     background-color: #0056b3; 
-    color: #fff; 
+}
+.nav-link.active {
+    font-weight: bolder;
+}
+.nav-link {
+    transition: transform 0.2s; 
+}
+.nav-link:hover {
+    transform: scale(1.2); 
 }
 
 /* CSS untuk layar kecil */
