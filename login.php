@@ -78,8 +78,8 @@ if (isset($_POST['submit'])) {
     </nav>
 
     <div class="container mb-3" style="max-width: 50vw;">
+        <h2 class="text-center mt-5 mb-4" id="header">Selamat Datang di Halaman Login</h2>
         <form class="form-floating" action="" method="POST" name="myForm">
-            <h2 class="text-center" id="header">Login</h2>
             <div class="form-floating mb-3">
                 <input id="floatingInput" type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                 <label for="floatingInput">Email</label>

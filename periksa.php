@@ -123,6 +123,10 @@ if (isset($_GET['aksi'])){
     </nav>
 
     <div class="container">
+        <h2 class="text-center mt-5" id="header">
+            Selamat Menikmati di Halaman Periksa<?php if (isset($_SESSION['username'])){?>,
+                <?php echo $_SESSION['username'] ?>
+            <?php } ?></h2>
         <h4 class="text-center mb-4" id="header">Form Pemeriksaan</h4>
         <form class="form-floating" method="POST" action="" name="myForm">
             <div class="form-floating mb-3">
