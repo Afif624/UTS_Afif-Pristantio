@@ -197,13 +197,13 @@ if (isset($_GET['aksi'])){
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Pasien</th>
-                        <th scope="col">Dokter</th>
-                        <th scope="col">Tanggal Periksa</th>
-                        <th scope="col">Catatan</th>
-                        <th scope="col">Obat</th>
-                        <th scope="col">Aksi</th>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col" class="text-center">Pasien</th>
+                        <th scope="col" class="text-center">Dokter</th>
+                        <th scope="col" class="text-center">Tanggal Periksa</th>
+                        <th scope="col" class="text-center">Catatan</th>
+                        <th scope="col" class="text-center">Obat</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -211,13 +211,13 @@ if (isset($_GET['aksi'])){
                     
                     while ($rowperiksa = mysqli_fetch_array($queriperiksa)){?>
                         <tr>
-                            <th scope="row"><?php echo $i++ ?></th>
-                            <td><?php echo $rowperiksa['pasien'] ?></td>
-                            <td><?php echo $rowperiksa['dokter'] ?></td>
-                            <td><?php echo $rowperiksa['tgl_periksa'] ?></td>
-                            <td><?php echo $rowperiksa['catatan'] ?></td>
-                            <td><?php echo $rowperiksa['obat'] ?></td>
-                            <td>
+                            <th class="text-center" scope="row"><?php echo $i++ ?></th>
+                            <td class="text-center"><?php echo $rowperiksa['pasien'] ?></td>
+                            <td class="text-center"><?php echo $rowperiksa['dokter'] ?></td>
+                            <td class="text-center"><?php echo $rowperiksa['tgl_periksa'] ?></td>
+                            <td class="text-center"><?php echo $rowperiksa['catatan'] ?></td>
+                            <td class="text-center"><?php echo $rowperiksa['obat'] ?></td>
+                            <td class="text-center">
                                 <a class="btn btn-info rounded-pill px-3" 
                                     href="periksa.php?id=<?php echo $rowperiksa['id'] ?>">Ubah</a>
                                 <a class="btn btn-danger rounded-pill px-3" 
@@ -230,7 +230,7 @@ if (isset($_GET['aksi'])){
             </table>
         <?php 
         } else{?>
-            <h4 class="text-center mb-4"> Tabel Pemeriksaan Masih Kosong, Silahkan Isi Terlebih Dahulu</h4>
+            <h5 class="text-center mb-4"> Tabel Pemeriksaan Masih Kosong, Silahkan Isi Terlebih Dahulu</h5>
         <?php
         }
         ?>

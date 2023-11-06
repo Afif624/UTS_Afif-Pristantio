@@ -56,7 +56,7 @@ session_start();
         <h2 class="text-center mt-5">
             Selamat Datang di Sistem Informasi Poliklinik<?php if (isset($_SESSION['username'])){?>,
                 <?php echo $_SESSION['username'] ?>
-            <?php }?></h2>
+            <?php } else{?>, Silahkan <a href="login.php">Login</a> dahulu<?php }?></h2>
         
         <div class="row">
             <div class="col-md-4">
@@ -64,8 +64,11 @@ session_start();
                     <img src="img/Dokter.png" class="card-img-top" alt="Image 1" style="height: 200px;">
                     <div class="card-body">
                         <h5 class="card-title">Page Dokter</h5>
-                        <p class="card-text">Description of Page 1 goes here.</p>
-                        <a href="?page=dokter" class="btn btn-primary">Visit Page</a>
+                        <p class="card-text">Halaman Dokter adalah tempat di mana Anda dapat menemukan informasi dan profil lengkap tentang para dokter yang bekerja di praktik medis</p>
+                        <div class="button-group">
+                            <a href="?page=dokter" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
+                            <a href="dokter.php" class="btn btn-secondary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Kunjungi</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -74,8 +77,11 @@ session_start();
                     <img src="img/Pasien.png" class="card-img-top" alt="Image 2" style="height: 200px;">
                     <div class="card-body">
                         <h5 class="card-title">Page Pasien</h5>
-                        <p class="card-text">Description of Page 2 goes here.</p>
-                        <a href="?page=pasien" class="btn btn-secondary">Visit Page</a>
+                        <p class="card-text">Halaman Pasien adalah tempat di mana Anda dapat menemukan informasi dan profil lengkap tentang para pasien yang pernah berobat medis.</p>
+                        <div class="button-group">
+                            <a href="?page=pasien" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
+                            <a href="pasien.php" class="btn btn-secondary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Kunjungi</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,17 +90,30 @@ session_start();
                     <img src="img/Periksa.png" class="card-img-top" alt="Image 3" style="height: 200px;">
                     <div class="card-body">
                         <h5 class="card-title">Page Periksa</h5>
-                        <p class="card-text">Description of Page 3 goes here.</p>
-                        <a href="?page=periksa" class="btn btn-info">Visit Page</a>
+                        <p class="card-text">Halaman Periksa adalah pusat informasi tentang prosedur pemeriksaan medis dan tes kesehatan dari para pasien dan dokter yang melayani.</p>
+                        <div class="button-group">
+                            <a href="?page=periksa" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
+                            <a href="periksa.php" class="btn btn-secondary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Kunjungi</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <?php 
-        if (isset($_GET['page'])){ ?>
-            <h2><?php echo ucwords($_GET['page']) ?></h2>
-            <?php include($_GET['page'] . ".php");
-        } 
+        if (isset($_SESSION['username'])){
+            if (isset($_GET['page'])){ ?>
+                <h2><?php echo ucwords($_GET['page']) ?></h2>
+                <?php 
+                ob_start(); 
+                include($_GET['page'] . ".php");
+
+                $pageContent = ob_get_clean(); 
+                $pageContentWithoutNavbar = preg_replace('/<nav class="navbar.*<\/nav>/s', '', $pageContent);
+            
+                echo '<div style="pointer-events: none; border: 5px solid;margin-bottom: 20px">' . $pageContentWithoutNavbar . '</div>';
+            } 
+        }
         ?>
     </main>
 

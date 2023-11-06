@@ -19,7 +19,12 @@
 .nav-link:hover {
     transform: scale(1.2); 
 }
-
+td, th{
+    border: solid 2px;
+}
+.form-control{
+    border: solid 2px;
+}
 /* CSS untuk layar kecil */
 @media (max-width: 767px) {
     .navbar-toggler-icon {

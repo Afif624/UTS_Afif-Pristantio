@@ -153,21 +153,21 @@ if (isset($_GET['aksi'])) {
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nama</th>
-                        <th scope="col">Alamat</th>
-                        <th scope="col">No HP</th>
-                        <th scope="col">Aksi</th>
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col" class="text-center">Nama</th>
+                        <th scope="col" class="text-center">Alamat</th>
+                        <th scope="col" class="text-center">No HP</th>
+                        <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php while ($row2 = mysqli_fetch_array($queri2)){?>
                         <tr>
-                            <th scope="row"><?php echo $i++ ?></th>
-                            <td><?php echo $row2['nama'] ?></td>
-                            <td><?php echo $row2['alamat'] ?></td>
-                            <td><?php echo $row2['no_hp'] ?></td>
-                            <td>
+                            <th class="text-center" scope="row"><?php echo $i++ ?></th>
+                            <td class="text-center"><?php echo $row2['nama'] ?></td>
+                            <td class="text-center"><?php echo $row2['alamat'] ?></td>
+                            <td class="text-center"><?php echo $row2['no_hp'] ?></td>
+                            <td class="text-center">
                                 <a class="btn btn-info rounded-pill px-3" 
                                     href="pasien.php?id=<?php echo $row2['id'] ?>">Ubah</a>
                                 <a class="btn btn-danger rounded-pill px-3" 
@@ -180,7 +180,7 @@ if (isset($_GET['aksi'])) {
             </table>
         <?php 
         } else{?>
-            <h4 class="text-center mb-4"> Tabel Pasien Masih Kosong, Silahkan Isi Terlebih Dahulu</h4>
+            <h5 class="text-center mb-4"> Tabel Pasien Masih Kosong, Silahkan Isi Terlebih Dahulu</h5>
         <?php
         }
         ?>
