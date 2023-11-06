@@ -22,13 +22,17 @@ if (isset($_POST['save'])){
                         nama='$nama_baru',
                         alamat='$alamat_baru',
                         no_hp='$no_hp_baru' WHERE id='$id_baru'");
+                    echo "<script>alert('Selamat, Anda berhasil merubah data Dokter!');
+                        window.location.href = 'dokter.php';
+                            </script>";
                 } else {
                     $queri4 = mysqli_query($mysqli, "INSERT INTO 
                         dokter(nama,alamat,no_hp) VALUES(
                             '$nama_baru','$alamat_baru','$no_hp_baru')");
+                    echo "<script>alert('Selamat, Anda berhasil menambah data Dokter!');
+                        window.location.href = 'dokter.php';
+                            </script>";
                 }
-                header("Location: dokter.php"); 
-                exit(); 
             } else{
                 echo "<script>alert('Silakan lengkapi bagian No HP!')</script>";
             }
@@ -51,8 +55,9 @@ if (isset($_GET['aksi'])) {
         } else {
             $queri5 = mysqli_query($mysqli, "DELETE FROM dokter 
                 WHERE id='$id'");
-            header("Location: dokter.php");
-            exit();
+            echo "<script>alert('Selamat, Anda berhasil menghapus data Dokter!');
+                window.location.href = 'dokter.php';
+                    </script>";
         }
     }
 }

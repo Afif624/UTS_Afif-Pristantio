@@ -14,10 +14,12 @@ if (isset($_POST['submit'])) {
         $sql2 = "SELECT * FROM users WHERE password='$password'";
         $result2 = mysqli_query($mysqli, $sql2);
         if ($result2->num_rows > 0) {
-            $row = mysqli_fetch_assoc($result2);
+            $row = mysqli_fetch_assoc($result1);
             $_SESSION['username'] = $row['username'];
             $_SESSION['email'] = $row['email'];
-            header("Location: index.php");
+            echo "<script>alert('Selamat, Anda berhasil Login!');
+                window.location.href = 'index.php';
+                    </script>";
         } else {
             echo "<script>alert('Password Anda salah. Silahkan coba lagi!')</script>";
         }

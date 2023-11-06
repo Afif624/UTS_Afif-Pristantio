@@ -22,11 +22,9 @@ if (isset($_POST['submit'])) {
                         VALUES ('$username', '$email', '$password')";
                 $result3 = mysqli_query($mysqli, $sql3);
                 if ($result3) {
-                    echo "<script>alert('Selamat, registrasi berhasil!')</script>";
-                    $username = "";
-                    $email = "";
-                    $_POST['password'] = "";
-                    $_POST['cpassword'] = "";
+                    echo "<script>alert('Selamat, Registrasi berhasil!');
+                        window.location.href = 'login.php';
+                            </script>";
                 } else {
                     echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
                 }
@@ -107,7 +105,7 @@ if (isset($_POST['submit'])) {
                 <label for="floatingInput">Ulang Password</label>
             </div>
             <div class="mb-3 text-center">
-                <button type="submit" name="submit" class="btn btn-primary btn-block">Register Now</button> <!-- Menambahkan kelas btn-block untuk tombol agar mengisi lebar form -->
+                <button type="submit" name="submit" class="btn btn-primary btn-block">Register Now</button> 
             </div>
             <h5 class="text-center">Anda sudah punya akun? Silahkan Ke <a href="login.php">Login</a></h5>
         </form>

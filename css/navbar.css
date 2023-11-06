@@ -8,7 +8,10 @@
     border: solid 2px;
 }
 .dark-mode-toggle:hover {
-    background-color: #0056b3; 
+    background-color: rgb(66, 144, 168);
+}
+body[data-bs-theme="dark"] .dark-mode-toggle:hover {
+    background-color:blue;
 }
 .nav-link.active {
     font-weight: bolder;

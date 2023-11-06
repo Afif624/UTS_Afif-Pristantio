@@ -63,7 +63,7 @@ session_start();
                 <div class="card mb-4">
                     <img src="img/Dokter.png" class="card-img-top" alt="Image 1" style="height: 200px;">
                     <div class="card-body">
-                        <h5 class="card-title">Page Dokter</h5>
+                        <h5 class="card-title">Halaman Dokter</h5>
                         <p class="card-text">Halaman Dokter adalah tempat di mana Anda dapat menemukan informasi dan profil lengkap tentang para dokter yang bekerja di praktik medis</p>
                         <div class="button-group">
                             <a href="?page=dokter" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
@@ -76,7 +76,7 @@ session_start();
                 <div class="card mb-4">
                     <img src="img/Pasien.png" class="card-img-top" alt="Image 2" style="height: 200px;">
                     <div class="card-body">
-                        <h5 class="card-title">Page Pasien</h5>
+                        <h5 class="card-title">Halaman Pasien</h5>
                         <p class="card-text">Halaman Pasien adalah tempat di mana Anda dapat menemukan informasi dan profil lengkap tentang para pasien yang pernah berobat medis.</p>
                         <div class="button-group">
                             <a href="?page=pasien" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
@@ -89,7 +89,7 @@ session_start();
                 <div class="card mb-4">
                     <img src="img/Periksa.png" class="card-img-top" alt="Image 3" style="height: 200px;">
                     <div class="card-body">
-                        <h5 class="card-title">Page Periksa</h5>
+                        <h5 class="card-title">Halaman Periksa</h5>
                         <p class="card-text">Halaman Periksa adalah pusat informasi tentang prosedur pemeriksaan medis dan tes kesehatan dari para pasien dan dokter yang melayani.</p>
                         <div class="button-group">
                             <a href="?page=periksa" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>

@@ -28,13 +28,17 @@ if (isset($_POST['save'])){
                                 tgl_periksa='$tanggal', 
                                 catatan='$catatan',
                                 obat='$obat' WHERE id='$id_baru'");
+                            echo "<script>alert('Selamat, Anda berhasil merubah data Periksa!');
+                                window.location.href = 'periksa.php';
+                                    </script>";
                         } else {
                             $queri2 = mysqli_query($mysqli, "INSERT INTO 
                                 periksa(id_pasien,id_dokter,tgl_periksa,catatan,obat) VALUES(
                                     '$idPasien','$idDokter','$tanggal','$catatan','$obat')");
+                            echo "<script>alert('Selamat, Anda berhasil menghapus data Periksa!');
+                                window.location.href = 'periksa.php';
+                                    </script>";
                         }
-                        header("Location: periksa.php"); 
-                        exit(); 
                     } else{
                         echo "<script>alert('Silakan lengkapi Obat!')</script>";
                     }
@@ -58,8 +62,9 @@ if (isset($_GET['aksi'])){
     if ($aksi == 'hapus'){
         $queri3 = mysqli_query($mysqli, "DELETE FROM periksa 
             WHERE id='$id'");
-        header("Location: periksa.php"); 
-        exit();  
+        echo "<script>alert('Selamat, Anda berhasil menghapus data Periksa!');
+            window.location.href = 'periksa.php';
+                </script>";
     }
 }
 ?>
