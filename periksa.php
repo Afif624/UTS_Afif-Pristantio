@@ -116,11 +116,14 @@ if (isset($_GET['aksi'])){
                 <i class="fas fa-sun"></i>
                 <i class="fas fa-moon"></i>
             </button>
+            <button class="btn btn-lg btn-scroll-to-top" id="scrollToTopButton">
+                <i class="fas fa-arrow-up"></i>
+            </button>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <h4 class="text-center mb-4">Form Pemeriksaan</h4>
+    <div class="container">
+        <h4 class="text-center mb-4" id="header">Form Pemeriksaan</h4>
         <form class="form-floating" method="POST" action="" name="myForm">
             <div class="form-floating mb-3">
                 <select class="form-control" id="floatingInput" name="idPasien">
@@ -241,6 +244,31 @@ if (isset($_GET['aksi'])){
         ?>
     </div>
 
+    <script>
+    $(document).ready(function () {
+        var tinggiHeader = $('#header').outerHeight();
+        function isHeaderVisible() {
+            var jendelaAtas = $(window).scrollTop();
+            return jendelaAtas > tinggiHeader;
+        }
+        function toggleScrollToTopButton() {
+            if (isHeaderVisible()) {
+                $('#scrollToTopButton').fadeIn();
+            } else {
+                $('#scrollToTopButton').fadeOut();
+            }
+        }
+
+        $(window).on('scroll resize', toggleScrollToTopButton);
+        toggleScrollToTopButton();
+        
+        $('#scrollToTopButton').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+        });
+    });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="js/main.js"></script>
 </body>

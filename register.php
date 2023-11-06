@@ -82,12 +82,15 @@ if (isset($_POST['submit'])) {
                 <i class="fas fa-sun"></i>
                 <i class="fas fa-moon"></i>
             </button>
+            <button class="btn btn-lg btn-scroll-to-top" id="scrollToTopButton">
+                <i class="fas fa-arrow-up"></i>
+            </button>
         </div>
     </nav>
 
-    <div class="container mt-5 mb-3" style="max-width: 50vw;">
+    <div class="container mb-3" style="max-width: 50vw;">
         <form class="form-floating" action="" method="POST" name="myForm">
-            <h2 class="text-center">Register</h2>
+            <h2 class="text-center" id="header">Register</h2>
             <div class="form-floating mb-3">
                 <input id="floatingInput" type="text" class="form-control" id="username" name="username" placeholder="Username" required>
                 <label for="floatingInput">Username</label>
@@ -111,6 +114,31 @@ if (isset($_POST['submit'])) {
         </form>
     </div>
 
+    <script>
+    $(document).ready(function () {
+        var tinggiHeader = $('#header').outerHeight();
+        function isHeaderVisible() {
+            var jendelaAtas = $(window).scrollTop();
+            return jendelaAtas > tinggiHeader;
+        }
+        function toggleScrollToTopButton() {
+            if (isHeaderVisible()) {
+                $('#scrollToTopButton').fadeIn();
+            } else {
+                $('#scrollToTopButton').fadeOut();
+            }
+        }
+
+        $(window).on('scroll resize', toggleScrollToTopButton);
+        toggleScrollToTopButton();
+        
+        $('#scrollToTopButton').click(function () {
+            $('html, body').animate({ scrollTop: 0 }, 800);
+            return false;
+        });
+    });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="js/main.js"></script>
 </body>

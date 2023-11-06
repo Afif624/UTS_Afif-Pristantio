@@ -1,17 +1,13 @@
-.fa-moon{
-    display: none;
+/* Nav */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
 }
 .navbar-toggler {
     border: solid 2px;
-}
-.dark-mode-toggle {
-    border: solid 2px;
-}
-.dark-mode-toggle:hover {
-    background-color: rgb(66, 144, 168);
-}
-body[data-bs-theme="dark"] .dark-mode-toggle:hover {
-    background-color:blue;
 }
 .nav-link.active {
     font-weight: bolder;
@@ -22,12 +18,37 @@ body[data-bs-theme="dark"] .dark-mode-toggle:hover {
 .nav-link:hover {
     transform: scale(1.2); 
 }
+.fa-moon{
+    display: none;
+}
+.dark-mode-toggle {
+    border: solid 2px;
+}
+.btn-scroll-to-top {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border: solid 2px;
+}
+.dark-mode-toggle:hover, .btn-scroll-to-top:hover{
+    background-color: rgb(66, 144, 168);
+}
+body[data-bs-theme="dark"] .dark-mode-toggle:hover, body[data-bs-theme="dark"] .btn-scroll-to-top:hover {
+    background-color:blue;
+}
+
+/* Main */
+.container{
+    margin-top: 100px;
+}
 td, th{
     border: solid 2px;
 }
 .form-control{
     border: solid 2px;
 }
+
 /* CSS untuk layar kecil */
 @media (max-width: 767px) {
     .navbar-toggler-icon {
