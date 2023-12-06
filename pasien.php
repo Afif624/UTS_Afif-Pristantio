@@ -91,7 +91,13 @@ if (isset($_GET['aksi'])) {
                     <a class="nav-link text-center active disabled" aria-current="page" href="#">Pasien</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link text-center" href="obat.php">Obat</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-center" href="periksa.php">Periksa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-center" href="detail.php">Detail</a>
                 </li>
                 <?php if (!isset($_SESSION['username'])){?>
                     <li class="nav-item">

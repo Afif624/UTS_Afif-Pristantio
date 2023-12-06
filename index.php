@@ -30,7 +30,13 @@ session_start();
                     <a class="nav-link text-center" href="pasien.php">Pasien</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link text-center" href="obat.php">Obat</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-center" href="periksa.php">Periksa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-center" href="detail.php">Detail</a>
                 </li>
                 <?php if (!isset($_SESSION['username'])){?>
                     <li class="nav-item">

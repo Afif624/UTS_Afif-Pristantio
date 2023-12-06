@@ -10,37 +10,37 @@ if (!isset($_SESSION['username'])) {
 }
 
 if (isset($_POST['save'])){
-    $nama_baru = $_POST['newNama'];
-    $alamat_baru = $_POST['newAlamat'];
-    $no_hp_baru = $_POST['newNoHP'];
-    if (!empty($nama_baru)){
-        if (!empty($alamat_baru)){
-            if (!empty($no_hp_baru)){
+    $namaobat_baru = $_POST['newNamaObat'];
+    $kemasan_baru = $_POST['newKemasan'];
+    $harga_baru = $_POST['newHarga'];
+    if (!empty($namaobat_baru)){
+        if (!empty($kemasan_baru)){
+            if (!empty($harga_baru)){
                 if (!empty($_POST['id'])){
                     $id_baru = $_POST['id'];
-                    $queri3 = mysqli_query($mysqli, "UPDATE dokter SET 
-                        nama='$nama_baru',
-                        alamat='$alamat_baru',
-                        no_hp='$no_hp_baru' WHERE id='$id_baru'");
-                    echo "<script>alert('Selamat, Anda berhasil merubah data Dokter!');
-                        window.location.href = 'dokter.php';
+                    $queri3 = mysqli_query($mysqli, "UPDATE Obat SET 
+                        namaobat='$namaobat_baru',
+                        kemasan='$kemasan_baru',
+                        harga='$harga_baru' WHERE id='$id_baru'");
+                    echo "<script>alert('Selamat, Anda berhasil merubah data Obat!');
+                        window.location.href = 'obat.php';
                             </script>";
                 } else {
                     $queri4 = mysqli_query($mysqli, "INSERT INTO 
-                        dokter(nama,alamat,no_hp) VALUES(
-                            '$nama_baru','$alamat_baru','$no_hp_baru')");
-                    echo "<script>alert('Selamat, Anda berhasil menambah data Dokter!');
-                        window.location.href = 'dokter.php';
+                        Obat(namaobat,kemasan,harga) VALUES(
+                            '$namaobat_baru','$kemasan_baru','$harga_baru')");
+                    echo "<script>alert('Selamat, Anda berhasil menambah data Obat!');
+                        window.location.href = 'obat.php';
                             </script>";
                 }
             } else{
-                echo "<script>alert('Silakan lengkapi bagian No HP!')</script>";
+                echo "<script>alert('Silakan lengkapi bagian Harga!')</script>";
             }
         } else{
-            echo "<script>alert('Silakan lengkapi bagian Alamat!')</script>";
+            echo "<script>alert('Silakan lengkapi bagian Kemasan!')</script>";
         } 
     } else{
-        echo "<script>alert('Silakan lengkapi bagian Nama!')</script>";
+        echo "<script>alert('Silakan lengkapi bagian Nama Obat!')</script>";
     }      
 }
 
@@ -48,15 +48,15 @@ if (isset($_GET['aksi'])) {
     $aksi = $_GET['aksi'];
     $id = $_GET['id'];
     if ($aksi == 'hapus') {
-        $result = mysqli_query($mysqli, "SELECT * FROM periksa 
-            WHERE id_dokter = $id");
+        $result = mysqli_query($mysqli, "SELECT * FROM detailtransaksi 
+            WHERE id_obat = $id");
         if ($result && $result->fetch_row()[0] > 0) {
-            echo "<script>alert('Tidak dapat menghapus Data Dokter ini karena digunakan Di Tabel Periksa.');</script>";
+            echo "<script>alert('Tidak dapat menghapus Data Obat ini karena digunakan Di Tabel Detail Transaksi Pemeriksaan.');</script>";
         } else {
-            $queri5 = mysqli_query($mysqli, "DELETE FROM dokter 
+            $queri5 = mysqli_query($mysqli, "DELETE FROM Obat
                 WHERE id='$id'");
-            echo "<script>alert('Selamat, Anda berhasil menghapus data Dokter!');
-                window.location.href = 'dokter.php';
+            echo "<script>alert('Selamat, Anda berhasil menghapus data Obat!');
+                window.location.href = 'obat.php';
                     </script>";
         }
     }
@@ -68,7 +68,7 @@ if (isset($_GET['aksi'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dokter-Poliklinik</title>
+    <title>Obat-Poliklinik</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/navbar.css">
@@ -85,13 +85,13 @@ if (isset($_GET['aksi'])) {
                     <a class="nav-link text-center" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-center active disabled" aria-current="page" href="#">Dokter</a>
+                    <a class="nav-link text-center" href="dokter.php">Dokter</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-center" href="pasien.php">Pasien</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-center" href="obat.php">Obat</a>
+                    <a class="nav-link text-center active disabled" aria-current="page" href="#">Obat</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-center" href="periksa.php">Periksa</a>
@@ -124,57 +124,57 @@ if (isset($_GET['aksi'])) {
 
     <div class="container">
         <h2 class="text-center mt-5" id="header">
-            Selamat Menikmati di Halaman Dokter<?php if (isset($_SESSION['username'])){?>,
+            Selamat Menikmati di Halaman Obat<?php if (isset($_SESSION['username'])){?>,
                 <?php echo $_SESSION['username'] ?>
             <?php } ?></h2>
-        <h4 class="text-center mt-4 mb-4">Form Dokter</h4>
+        <h4 class="text-center mt-4 mb-4">Form Obat</h4>
         <form class="form-floating" method="POST" action="" name="myForm">
             <?php 
-            $nama = '';
-            $alamat = '';
-            $no_hp = '';
+            $namaobat = '';
+            $kemasan = '';
+            $harga = '';
             if (isset($_GET['id'])){
                 $id=$_GET['id'];
                 $queri1 = mysqli_query($mysqli, 
-                    "SELECT * FROM dokter WHERE id='$id'");
+                    "SELECT * FROM Obat WHERE id='$id'");
                 while ($row1 = mysqli_fetch_array($queri1)){
-                    $nama = $row1['nama'];
-                    $alamat = $row1['alamat'];
-                    $no_hp = $row1['no_hp'];
+                    $namaobat = $row1['namaobat'];
+                    $kemasan = $row1['kemasan'];
+                    $harga = $row1['harga'];
                 }?>
                 <input type="hidden" name="id" value="<?php echo $id ?>">
                 <?php 
             }?>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="newNama" 
-                    placeholder="Nama Dokter" value="<?php echo $nama ?>">
-                <label for="floatingInput">Nama Dokter</label>
+                <input type="text" class="form-control" id="floatingInput" name="newNamaObat" 
+                    placeholder="Nama Obat" value="<?php echo $namaobat ?>">
+                <label for="floatingInput">Nama Obat</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="newAlamat" 
-                    placeholder="Alamat Dokter" value="<?php echo $alamat ?>">
-                <label for="floatingInput">Alamat Dokter</label>
+                <input type="text" class="form-control" id="floatingInput" name="newKemasan" 
+                    placeholder="Kemasan" value="<?php echo $kemasan ?>">
+                <label for="floatingInput">Kemasan</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="newNoHP" 
-                    placeholder="No HP Dokter" value="<?php echo $no_hp ?>">
-                <label for="floatingInput">No HP Dokter</label>
+                <input type="number" class="form-control" id="floatingInput" name="newHarga" 
+                    placeholder="Harga" value="<?php echo $harga ?>">
+                <label for="floatingInput">Harga</label>
             </div>
             <button type="submit" class="btn btn-primary rounded-pill px-3" name="save">Simpan</button>
         </form>
-
-        <h4 class="text-center mb-4">Tabel Dokter</h4>
-        <?php 
+        
+        <h4 class="text-center mb-4">Tabel Obat</h4>
+        <?php
         $i= 1;
-        $queri2 = mysqli_query($mysqli, "SELECT * FROM dokter");
+        $queri2 = mysqli_query($mysqli, "SELECT * FROM Obat");
         if ($queri2->num_rows > 0){?>
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col" class="text-center">#</th>
                         <th scope="col" class="text-center">Nama</th>
-                        <th scope="col" class="text-center">Alamat</th>
-                        <th scope="col" class="text-center">No HP</th>
+                        <th scope="col" class="text-center">Kemasan</th>
+                        <th scope="col" class="text-center">Harga</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -182,14 +182,14 @@ if (isset($_GET['aksi'])) {
                     <?php while ($row2 = mysqli_fetch_array($queri2)){?>
                         <tr>
                             <th class="text-center" scope="row"><?php echo $i++ ?></th>
-                            <td class="text-center"><?php echo $row2['nama'] ?></td>
-                            <td class="text-center"><?php echo $row2['alamat'] ?></td>
-                            <td class="text-center"><?php echo $row2['no_hp'] ?></td>
+                            <td class="text-center"><?php echo $row2['namaobat'] ?></td>
+                            <td class="text-center"><?php echo $row2['kemasan'] ?></td>
+                            <td class="text-center"><?php echo $row2['harga'] ?></td>
                             <td class="text-center">
                                 <a class="btn btn-info rounded-pill px-3" 
-                                    href="dokter.php?id=<?php echo $row2['id'] ?>">Ubah</a>
+                                    href="obat.php?id=<?php echo $row2['id'] ?>">Ubah</a>
                                 <a class="btn btn-danger rounded-pill px-3" 
-                                    href="dokter.php?id=<?php echo $row2['id']?>
+                                    href="obat.php?id=<?php echo $row2['id']?>
                                         &aksi=hapus">Hapus</a>
                             </td>
                         </tr>
@@ -198,7 +198,7 @@ if (isset($_GET['aksi'])) {
             </table>
         <?php 
         } else{?>
-            <h5 class="text-center mb-4"> Tabel Dokter Masih Kosong, Silahkan Isi Terlebih Dahulu</h5>
+            <h5 class="text-center mb-4"> Tabel Obat Masih Kosong, Silahkan Isi Terlebih Dahulu</h5>
         <?php
         }
         ?>

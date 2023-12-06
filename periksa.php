@@ -14,12 +14,12 @@ if (isset($_POST['save'])){
     $idDokter = $_POST['idDokter'];
     $tanggal = $_POST['tanggal'];
     $catatan = $_POST['catatan'];
-    $obat = $_POST['obat'];
+    $biayaPeriksa = $_POST['biayaPeriksa'];
     if (!empty($idPasien)){
         if (!empty($idDokter)){
             if (!empty($tanggal)){
                 if (!empty($catatan)){
-                    if (!empty($obat)){
+                    if (!empty($biayaPeriksa)){
                         if (!empty($_POST['id'])){
                             $id_baru = $_POST['id'];
                             $queri1 = mysqli_query($mysqli, "UPDATE periksa SET 
@@ -27,20 +27,20 @@ if (isset($_POST['save'])){
                                 id_dokter='$idDokter',
                                 tgl_periksa='$tanggal', 
                                 catatan='$catatan',
-                                obat='$obat' WHERE id='$id_baru'");
+                                biaya_periksa='$biayaPeriksa' WHERE id='$id_baru'");
                             echo "<script>alert('Selamat, Anda berhasil merubah data Periksa!');
                                 window.location.href = 'periksa.php';
                                     </script>";
                         } else {
                             $queri2 = mysqli_query($mysqli, "INSERT INTO 
-                                periksa(id_pasien,id_dokter,tgl_periksa,catatan,obat) VALUES(
-                                    '$idPasien','$idDokter','$tanggal','$catatan','$obat')");
-                            echo "<script>alert('Selamat, Anda berhasil menghapus data Periksa!');
+                                periksa(id_pasien,id_dokter,tgl_periksa,catatan,biaya_periksa) VALUES(
+                                    '$idPasien','$idDokter','$tanggal','$catatan','$biayaPeriksa')");
+                            echo "<script>alert('Selamat, Anda berhasil menambah data Periksa!');
                                 window.location.href = 'periksa.php';
                                     </script>";
                         }
                     } else{
-                        echo "<script>alert('Silakan lengkapi Obat!')</script>";
+                        echo "<script>alert('Silakan lengkapi Biaya Periksa!')</script>";
                     }
                 } else{
                     echo "<script>alert('Silakan lengkapi Catatan!')</script>";
@@ -49,7 +49,7 @@ if (isset($_POST['save'])){
                 echo "<script>alert('Silakan lengkapi Tanggal Pemeriksaan!')</script>";
             }
         } else{
-            echo "<script>alert('Silakan oilih data Dokter!')</script>";
+            echo "<script>alert('Silakan pilih data Dokter!')</script>";
         } 
     } else{
         echo "<script>alert('Silakan pilih data Pasien!')</script>";
@@ -60,11 +60,17 @@ if (isset($_GET['aksi'])){
     $aksi=$_GET['aksi'];
     $id=$_GET['id'];
     if ($aksi == 'hapus'){
-        $queri3 = mysqli_query($mysqli, "DELETE FROM periksa 
-            WHERE id='$id'");
-        echo "<script>alert('Selamat, Anda berhasil menghapus data Periksa!');
-            window.location.href = 'periksa.php';
-                </script>";
+        $result = mysqli_query($mysqli, "SELECT * FROM detailtransaksi 
+            WHERE id_periksa = $id");
+        if ($result && $result->fetch_row()[0] > 0) {
+            echo "<script>alert('Tidak dapat menghapus Data Periksa ini karena digunakan Di Tabel Detail Transaksi Pemeriksaan.');</script>";
+        } else {
+            $queri3 = mysqli_query($mysqli, "DELETE FROM periksa 
+                WHERE id='$id'");
+            echo "<script>alert('Selamat, Anda berhasil menghapus data Periksa!');
+                window.location.href = 'periksa.php';
+                    </script>";
+        }
     }
 }
 ?>
@@ -97,7 +103,13 @@ if (isset($_GET['aksi'])){
                     <a class="nav-link text-center" href="pasien.php">Pasien</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link text-center" href="obat.php">Obat</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-center active disabled" aria-current="page" href="#">Periksa</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-center" href="detail.php">Detail</a>
                 </li>
                 <?php if (!isset($_SESSION['username'])){?>
                     <li class="nav-item">
@@ -129,17 +141,35 @@ if (isset($_GET['aksi'])){
             <?php } ?></h2>
         <h4 class="text-center mb-4" id="header">Form Pemeriksaan</h4>
         <form class="form-floating" method="POST" action="" name="myForm">
+            <?php 
+                $tgl_periksa = '';
+                $catatan = '';
+                $biaya_periksa= '';
+                if (isset($_GET['id'])){
+                    $id=$_GET['id'];
+                    $queri = mysqli_query($mysqli, 
+                        "SELECT periksa.*, dokter.nama as dokter, pasien.nama as pasien FROM periksa 
+                        JOIN dokter ON dokter.id = periksa.id_dokter
+                        JOIN pasien ON pasien.id = periksa.id_pasien
+                        WHERE periksa.id='$id'");
+                    while ($row = mysqli_fetch_array($queri)){
+                        $dokter = $row['dokter'];
+                        $pasien = $row['pasien'];
+                        $tgl_periksa = $row['tgl_periksa'];
+                        $catatan = $row['catatan'];
+                        $biaya_periksa = $row['biaya_periksa'];
+                    }?>
+                    <input type="hidden" name="id" value="<?php echo $id ?>">
+                    <?php 
+            }?>
             <div class="form-floating mb-3">
                 <select class="form-control" id="floatingInput" name="idPasien">
                     <?php 
                     $select='';
                     $queripasien=mysqli_query($mysqli, "SELECT * FROM pasien");
                     while ($rowpasien=mysqli_fetch_array($queripasien)){
-                        if($rowpasien['id'] == $idPasien){
-                            $select = 'selected=="selected"';
-                        } else{
-                            $select='';
-                        }?>
+                        $select = ($rowpasien['nama'] == $pasien) ? 'selected' : '';
+                        ?>
                         <option value="<?php echo $rowpasien['id'] ?>" <?php echo $select?>>
                             <?php echo $rowpasien['nama']?>
                         </option>
@@ -153,11 +183,7 @@ if (isset($_GET['aksi'])){
                     $select='';
                     $queridokter=mysqli_query($mysqli, "SELECT * FROM dokter");
                     while ($rowdokter=mysqli_fetch_array($queridokter)){
-                        if($rowdokter['id'] == $idDokter){
-                            $select = 'selected=="selected"';
-                        } else{
-                            $select='';
-                        }?>
+                        $select = ($rowdokter['nama'] == $dokter) ? 'selected' : '';?>
                         <option value="<?php echo $rowdokter['id'] ?>" <?php echo $select?>>
                             <?php echo $rowdokter['nama']?>
                         </option>
@@ -165,20 +191,6 @@ if (isset($_GET['aksi'])){
                 </select>
                 <label for="floatingInput">Nama Dokter</label>
             </div>
-            <?php 
-            $tgl_periksa = '';
-            $catatan = '';
-            if (isset($_GET['id'])){
-                $id=$_GET['id'];
-                $queri = mysqli_query($mysqli, 
-                    "SELECT * FROM periksa WHERE id='$id'");
-                while ($row = mysqli_fetch_array($queri)){
-                    $tgl_periksa = $row['tgl_periksa'];
-                    $catatan = $row['catatan'];
-                }?>
-                <input type="hidden" name="id" value="<?php echo $id ?>">
-                <?php 
-            }?>
             <div class="form-floating mb-3">
                 <input type="datetime-local" class="form-control" id="floatingInput" name="tanggal" 
                     placeholder="Tanggal Periksa" value="<?php echo $tgl_periksa ?>">
@@ -190,9 +202,9 @@ if (isset($_GET['aksi'])){
                 <label for="floatingInput">Catatan</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="floatingInput" name="obat" 
-                    placeholder="Obat" value="<?php echo $obat ?>">
-                <label for="floatingInput">Obat</label>
+                <input type="text" class="form-control" id="floatingInput" name="biayaPeriksa" 
+                    placeholder="Biaya Periksa" value="<?php echo $biaya_periksa ?>">
+                <label for="floatingInput">Biaya Periksa</label>
             </div>
             <button type="submit" class="btn btn-primary rounded-pill px-3" name="save">Simpan</button>
         </form>
@@ -214,7 +226,7 @@ if (isset($_GET['aksi'])){
                         <th scope="col" class="text-center">Dokter</th>
                         <th scope="col" class="text-center">Tanggal Periksa</th>
                         <th scope="col" class="text-center">Catatan</th>
-                        <th scope="col" class="text-center">Obat</th>
+                        <th scope="col" class="text-center">Biaya Periksa</th>
                         <th scope="col" class="text-center">Aksi</th>
                     </tr>
                 </thead>
@@ -228,7 +240,7 @@ if (isset($_GET['aksi'])){
                             <td class="text-center"><?php echo $rowperiksa['dokter'] ?></td>
                             <td class="text-center"><?php echo $rowperiksa['tgl_periksa'] ?></td>
                             <td class="text-center"><?php echo $rowperiksa['catatan'] ?></td>
-                            <td class="text-center"><?php echo $rowperiksa['obat'] ?></td>
+                            <td class="text-center"><?php echo $rowperiksa['biaya_periksa'] ?></td>
                             <td class="text-center">
                                 <a class="btn btn-info rounded-pill px-3" 
                                     href="periksa.php?id=<?php echo $rowperiksa['id'] ?>">Ubah</a>
@@ -252,28 +264,28 @@ if (isset($_GET['aksi'])){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="js/main.js"></script>
     <script>
-    $(document).ready(function () {
-        var tinggiHeader = $('#header').outerHeight();
-        function isHeaderVisible() {
-            var jendelaAtas = $(window).scrollTop();
-            return jendelaAtas > tinggiHeader;
-        }
-        function toggleScrollToTopButton() {
-            if (isHeaderVisible()) {
-                $('#scrollToTopButton').fadeIn();
-            } else {
-                $('#scrollToTopButton').fadeOut();
+        $(document).ready(function () {
+            var tinggiHeader = $('#header').outerHeight();
+            function isHeaderVisible() {
+                var jendelaAtas = $(window).scrollTop();
+                return jendelaAtas > tinggiHeader;
             }
-        }
+            function toggleScrollToTopButton() {
+                if (isHeaderVisible()) {
+                    $('#scrollToTopButton').fadeIn();
+                } else {
+                    $('#scrollToTopButton').fadeOut();
+                }
+            }
 
-        $(window).on('scroll resize', toggleScrollToTopButton);
-        toggleScrollToTopButton();
-        
-        $('#scrollToTopButton').click(function () {
-            $('html, body').animate({ scrollTop: 0 }, 800);
-            return false;
+            $(window).on('scroll resize', toggleScrollToTopButton);
+            toggleScrollToTopButton();
+            
+            $('#scrollToTopButton').click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 800);
+                return false;
+            });
         });
-    });
     </script>
 </body>
 </html>
