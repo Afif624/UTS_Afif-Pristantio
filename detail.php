@@ -14,21 +14,27 @@ if (isset($_POST['save'])){
     $idObat = $_POST['idObat'];
     if (!empty($idPeriksa)){
         if (!empty($idObat)){
-            if (!empty($_POST['id'])){
-                $id_baru = $_POST['id'];
-                $queri1 = mysqli_query($mysqli, "UPDATE detailtransaksi SET 
-                    id_periksa='$idPeriksa',
-                    id_obat='$idObat' WHERE id='$id_baru'");
-                echo "<script>alert('Selamat, Anda berhasil merubah data Detail!');
-                    window.location.href = 'detail.php';
-                        </script>";
-            } else {
-                $queri2 = mysqli_query($mysqli, "INSERT INTO 
-                    detailtransaksi(id_periksa,id_obat) VALUES(
-                        '$idPeriksa','$idObat')");
-                echo "<script>alert('Selamat, Anda berhasil menambah data Detail!');
-                    window.location.href = 'detail.php';
-                        </script>";
+            $queriduplikat = mysqli_query($mysqli, "SELECT * FROM detailtransaksi 
+                WHERE id_periksa=$idPeriksa AND id_obat=$idObat");
+            if ($queriduplikat->num_rows > 0){
+                echo "<script>alert('Maaf Data Detail itu sudah ada!')</script>";
+            } else{
+                if (!empty($_POST['id'])){
+                    $id_baru = $_POST['id'];
+                    $queri1 = mysqli_query($mysqli, "UPDATE detailtransaksi SET 
+                        id_periksa='$idPeriksa',
+                        id_obat='$idObat' WHERE id='$id_baru'");
+                    echo "<script>alert('Selamat, Anda berhasil merubah data Detail!');
+                        window.location.href = 'detail.php';
+                            </script>";
+                } else {
+                    $queri2 = mysqli_query($mysqli, "INSERT INTO 
+                        detailtransaksi(id_periksa,id_obat) VALUES(
+                            '$idPeriksa','$idObat')");
+                    echo "<script>alert('Selamat, Anda berhasil menambah data Detail!');
+                        window.location.href = 'detail.php';
+                            </script>";
+                }
             }
         } else{
             echo "<script>alert('Silakan oilih data Dokter!')</script>";
@@ -153,7 +159,8 @@ if (isset($_GET['aksi'])){
                         "SELECT periksa.*, pasien.nama as pasien, dokter.nama as dokter 
                         FROM dokter 
                         JOIN periksa ON dokter.id = periksa.id_dokter 
-                        JOIN pasien ON pasien.id = periksa.id_pasien");
+                        JOIN pasien ON pasien.id = periksa.id_pasien
+                        ORDER BY pasien.nama ASC");
                     while ($rowPeriksa=mysqli_fetch_array($queriPeriksa)){
                         $select = ($rowPeriksa['pasien'] == $pasien) ? 'selected' : '';
                         ?>
@@ -190,7 +197,7 @@ if (isset($_GET['aksi'])){
                 <select class="form-control" id="floatingInput" name="idObat">
                     <?php 
                     $select='';
-                    $queriObat=mysqli_query($mysqli, "SELECT * FROM obat");
+                    $queriObat=mysqli_query($mysqli, "SELECT * FROM obat ORDER BY namaobat ASC");
                     while ($rowObat=mysqli_fetch_array($queriObat)){
                         $select = ($rowObat['namaobat'] == $obat) ? 'selected' : '';
                         ?>
@@ -206,16 +213,17 @@ if (isset($_GET['aksi'])){
 
         <h4 class="text-center mb-4">Tabel Detail Pemeriksaan</h4>
         <?php 
-        $i= 1;
+        $i = 1;
         $queri4 = mysqli_query($mysqli, 
-            "SELECT detailtransaksi.id as detailid, periksa.*, pasien.nama as pasien, dokter.nama as dokter, obat.namaobat as obat, obat.harga as harga
+            "SELECT periksa.*, pasien.nama as pasien, dokter.nama as dokter, GROUP_CONCAT(obat.namaobat) as obat, GROUP_CONCAT(obat.harga) as harga
             FROM dokter
             JOIN periksa ON dokter.id = periksa.id_dokter
             JOIN pasien ON pasien.id = periksa.id_pasien
             JOIN detailtransaksi ON periksa.id = detailtransaksi.id_periksa
             JOIN obat ON obat.id = detailtransaksi.id_obat
+            GROUP BY periksa.id
             ORDER BY periksa.tgl_periksa DESC");
-        if ($queri4->num_rows > 0){?>
+        if ($queri4->num_rows > 0) {?>
             <table class="table">
                 <thead>
                     <tr>
@@ -231,34 +239,37 @@ if (isset($_GET['aksi'])){
                 </thead>
                 <tbody>
                     <?php 
-                    
-                    while ($row4 = mysqli_fetch_array($queri4)){
-                        $total=$row4['biaya_periksa']+$row4['harga'];?>
+                    while ($row4 = mysqli_fetch_array($queri4)) {
+                        $total = $row4['biaya_periksa'] + array_sum(explode(',', $row4['harga']));
+                        $obatList = array_unique(explode(',', $row4['obat']));?>
                         <tr>
                             <th class="text-center" scope="row"><?php echo $i++ ?></th>
                             <td class="text-center"><?php echo $row4['pasien'] ?></td>
                             <td class="text-center"><?php echo $row4['dokter'] ?></td>
                             <td class="text-center"><?php echo $row4['tgl_periksa'] ?></td>
                             <td class="text-center"><?php echo $row4['catatan'] ?></td>
-                            <td class="text-center"><?php echo $row4['obat'] ?></td>
+                            <td class="text-center">
+                                <?php foreach ($obatList as $obat) {
+                                    echo " " . $obat . "<br>";
+                                } ?>
+                            </td>
                             <td class="text-center"><?php echo $total ?></td>
                             <td class="text-center">
                                 <a class="btn btn-info rounded-pill px-3" 
                                     href="detail.php?id=<?php echo $row4['detailid'] ?>">Ubah</a>
                                 <a class="btn btn-danger rounded-pill px-3" 
-                                    href="detail.php?id=<?php echo $row4['detailid']?>
-                                        &aksi=hapus">Hapus</a>
+                                    href="detail.php?id=<?php echo $row4['detailid']?>&aksi=hapus">Hapus</a>
                             </td>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
         <?php 
-        } else{?>
+        } else {?>
             <h5 class="text-center mb-4"> Tabel Detail Pemeriksaan Masih Kosong, Silahkan Isi Terlebih Dahulu</h5>
         <?php
         }
-        ?>
+        ?>        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

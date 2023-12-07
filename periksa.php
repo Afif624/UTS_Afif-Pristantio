@@ -166,7 +166,7 @@ if (isset($_GET['aksi'])){
                 <select class="form-control" id="floatingInput" name="idPasien">
                     <?php 
                     $select='';
-                    $queripasien=mysqli_query($mysqli, "SELECT * FROM pasien");
+                    $queripasien=mysqli_query($mysqli, "SELECT * FROM pasien ORDER BY nama ASC");
                     while ($rowpasien=mysqli_fetch_array($queripasien)){
                         $select = ($rowpasien['nama'] == $pasien) ? 'selected' : '';
                         ?>
@@ -181,7 +181,7 @@ if (isset($_GET['aksi'])){
                 <select class="form-control" id="floatingInput" name="idDokter">
                     <?php 
                     $select='';
-                    $queridokter=mysqli_query($mysqli, "SELECT * FROM dokter");
+                    $queridokter=mysqli_query($mysqli, "SELECT * FROM dokter ORDER BY nama ASC");
                     while ($rowdokter=mysqli_fetch_array($queridokter)){
                         $select = ($rowdokter['nama'] == $dokter) ? 'selected' : '';?>
                         <option value="<?php echo $rowdokter['id'] ?>" <?php echo $select?>>

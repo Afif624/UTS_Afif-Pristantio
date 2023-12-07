@@ -16,22 +16,27 @@ if (isset($_POST['save'])){
     if (!empty($namaobat_baru)){
         if (!empty($kemasan_baru)){
             if (!empty($harga_baru)){
-                if (!empty($_POST['id'])){
-                    $id_baru = $_POST['id'];
-                    $queri3 = mysqli_query($mysqli, "UPDATE Obat SET 
-                        namaobat='$namaobat_baru',
-                        kemasan='$kemasan_baru',
-                        harga='$harga_baru' WHERE id='$id_baru'");
-                    echo "<script>alert('Selamat, Anda berhasil merubah data Obat!');
-                        window.location.href = 'obat.php';
-                            </script>";
-                } else {
-                    $queri4 = mysqli_query($mysqli, "INSERT INTO 
-                        Obat(namaobat,kemasan,harga) VALUES(
-                            '$namaobat_baru','$kemasan_baru','$harga_baru')");
-                    echo "<script>alert('Selamat, Anda berhasil menambah data Obat!');
-                        window.location.href = 'obat.php';
-                            </script>";
+                $queriduplikat = mysqli_query($mysqli, "SELECT * FROM obat WHERE namaobat='$namaobat_baru'");
+                if ($queriduplikat->num_rows > 0){
+                    echo "<script>alert('Maaf Data Obat itu sudah ada!')</script>";
+                } else{
+                    if (!empty($_POST['id'])){
+                        $id_baru = $_POST['id'];
+                        $queri3 = mysqli_query($mysqli, "UPDATE obat SET 
+                            namaobat='$namaobat_baru',
+                            kemasan='$kemasan_baru',
+                            harga='$harga_baru' WHERE id='$id_baru'");
+                        echo "<script>alert('Selamat, Anda berhasil merubah data Obat!');
+                            window.location.href = 'obat.php';
+                                </script>";
+                    } else {
+                        $queri4 = mysqli_query($mysqli, "INSERT INTO 
+                            obat(namaobat,kemasan,harga) VALUES(
+                                '$namaobat_baru','$kemasan_baru','$harga_baru')");
+                        echo "<script>alert('Selamat, Anda berhasil menambah data Obat!');
+                            window.location.href = 'obat.php';
+                                </script>";
+                    }
                 }
             } else{
                 echo "<script>alert('Silakan lengkapi bagian Harga!')</script>";
@@ -53,7 +58,7 @@ if (isset($_GET['aksi'])) {
         if ($result && $result->fetch_row()[0] > 0) {
             echo "<script>alert('Tidak dapat menghapus Data Obat ini karena digunakan Di Tabel Detail Transaksi Pemeriksaan.');</script>";
         } else {
-            $queri5 = mysqli_query($mysqli, "DELETE FROM Obat
+            $queri5 = mysqli_query($mysqli, "DELETE FROM obat
                 WHERE id='$id'");
             echo "<script>alert('Selamat, Anda berhasil menghapus data Obat!');
                 window.location.href = 'obat.php';
@@ -166,7 +171,7 @@ if (isset($_GET['aksi'])) {
         <h4 class="text-center mb-4">Tabel Obat</h4>
         <?php
         $i= 1;
-        $queri2 = mysqli_query($mysqli, "SELECT * FROM Obat");
+        $queri2 = mysqli_query($mysqli, "SELECT * FROM Obat ORDER BY namaobat ASC");
         if ($queri2->num_rows > 0){?>
             <table class="table">
                 <thead>

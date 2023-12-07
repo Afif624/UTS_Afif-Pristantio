@@ -16,22 +16,27 @@ if (isset($_POST['save'])){
     if (!empty($nama_baru)){
         if (!empty($alamat_baru)){
             if (!empty($no_hp_baru)){
-                if (!empty($_POST['id'])){
-                    $id_baru = $_POST['id'];
-                    $queri3 = mysqli_query($mysqli, "UPDATE pasien SET 
-                        nama='$nama_baru',
-                        alamat='$alamat_baru',
-                        no_hp='$no_hp_baru' WHERE id='$id_baru'");
-                    echo "<script>alert('Selamat, Anda berhasil merubah data Pasien!');
-                        window.location.href = 'pasien.php';
-                            </script>";
-                } else {
-                    $queri4 = mysqli_query($mysqli, "INSERT INTO 
-                        pasien(nama,alamat,no_hp) VALUES(
-                            '$nama_baru','$alamat_baru','$no_hp_baru')");
-                    echo "<script>alert('Selamat, Anda berhasil menambah data Pasien!');
-                        window.location.href = 'pasien.php';
-                            </script>";
+                $queriduplikat = mysqli_query($mysqli, "SELECT * FROM pasien WHERE no_hp=$no_hp_baru");
+                if ($queriduplikat->num_rows > 0){
+                    echo "<script>alert('Maaf Nomor HP sudah digunakan!')</script>";
+                } else{
+                    if (!empty($_POST['id'])){
+                        $id_baru = $_POST['id'];
+                        $queri3 = mysqli_query($mysqli, "UPDATE pasien SET 
+                            nama='$nama_baru',
+                            alamat='$alamat_baru',
+                            no_hp='$no_hp_baru' WHERE id='$id_baru'");
+                        echo "<script>alert('Selamat, Anda berhasil merubah data Pasien!');
+                            window.location.href = 'pasien.php';
+                                </script>";
+                    } else {
+                        $queri4 = mysqli_query($mysqli, "INSERT INTO 
+                            pasien(nama,alamat,no_hp) VALUES(
+                                '$nama_baru','$alamat_baru','$no_hp_baru')");
+                        echo "<script>alert('Selamat, Anda berhasil menambah data Pasien!');
+                            window.location.href = 'pasien.php';
+                                </script>";
+                    }
                 }
             } else{
                 echo "<script>alert('Silakan lengkapi bagian No HP!')</script>";
@@ -166,7 +171,7 @@ if (isset($_GET['aksi'])) {
         <h4 class="text-center mb-4">Tabel Pasien</h4>
         <?php
         $i= 1;
-        $queri2 = mysqli_query($mysqli, "SELECT * FROM pasien");
+        $queri2 = mysqli_query($mysqli, "SELECT * FROM pasien ORDER BY nama ASC");
         if ($queri2->num_rows > 0){?>
             <table class="table">
                 <thead>

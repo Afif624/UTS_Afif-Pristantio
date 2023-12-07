@@ -96,6 +96,19 @@ session_start();
             </div>
             <div class="col-md-4">
                 <div class="card mb-4">
+                    <img src="img/Obat.png" class="card-img-top" alt="Image 2" style="height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title">Halaman Obat</h5>
+                        <p class="card-text">Halaman Obat adalah tempat di mana Anda dapat menemukan informasi dari obat-obatan yang digunakan dalam pemeriksaan medis oleh pasien.</p>
+                        <div class="button-group">
+                            <a href="?page=obat" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
+                            <a href="obat.php" class="btn btn-secondary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Kunjungi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
                     <img src="img/Periksa.png" class="card-img-top" alt="Image 3" style="height: 200px;">
                     <div class="card-body">
                         <h5 class="card-title">Halaman Periksa</h5>
@@ -103,6 +116,19 @@ session_start();
                         <div class="button-group">
                             <a href="?page=periksa" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
                             <a href="periksa.php" class="btn btn-secondary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Kunjungi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <img src="img/Detail.png" class="card-img-top" alt="Image 2" style="height: 200px;">
+                    <div class="card-body">
+                        <h5 class="card-title">Halaman Detail</h5>
+                        <p class="card-text">Halaman Detail adalah tempat di mana Anda dapat menemukan informasi administrasi terkait pemeriksaan yang terjadi dengan pasien</p>
+                        <div class="button-group">
+                            <a href="?page=detail" class="btn btn-primary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Tampilkan</a>
+                            <a href="detail.php" class="btn btn-secondary <?php if (!isset($_SESSION['username'])){?>disabled<?php }?>">Kunjungi</a>
                         </div>
                     </div>
                 </div>
