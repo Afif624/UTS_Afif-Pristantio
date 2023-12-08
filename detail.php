@@ -219,12 +219,62 @@ if (isset($_GET['aksi'])){
                                 } ?>
                             </td>
                             <td class="text-center"><?php echo $total ?></td>
+                            <!-- Add a button to trigger the print function -->
                             <td class="text-center">
-                                <a class="btn btn-info rounded-pill px-3" 
-                                    href="detail.php?id=<?php echo $row4['id'] ?>">Ubah</a>
-                                <a class="btn btn-danger rounded-pill px-3" 
-                                    href="detail.php?id=<?php echo $row4['id']?>&aksi=hapus">Hapus</a>
+                                <button class="btn btn-info rounded-pill px-3" onclick="printRow(<?php echo $row4['id']; ?>)">Print</button>
+                                <a class="btn btn-danger rounded-pill px-3" href="detail.php?id=<?php echo $row4['id']?>&aksi=hapus">Hapus</a>
                             </td>
+
+                            <!-- Add a modal for displaying the print content -->
+                            <div class="modal fade" id="printModal<?php echo $row4['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="printModalLabel">Print Preview</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Content to be printed -->
+                                            <h4>Detail Pemeriksaan</h4>
+                                            <p>Pasien: <?php echo $row4['pasien']; ?></p>
+                                            <p>Dokter: <?php echo $row4['dokter']; ?></p>
+                                            <!-- Add more details as needed -->
+
+                                            <!-- Print button inside the modal -->
+                                            <button class="btn btn-info" onclick="printContent('printContent<?php echo $row4['id']; ?>')">Print</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Add a hidden div to store the content to be printed -->
+                            <div id="printContent<?php echo $row4['id']; ?>" style="display: none;">
+                                <h4>Detail Pemeriksaan</h4>
+                                <p>Pasien: <?php echo $row4['pasien']; ?></p>
+                                <p>Dokter: <?php echo $row4['dokter']; ?></p>
+                                <!-- Add more details as needed -->
+                            </div>
+
+                            <!-- JavaScript function for printing content -->
+                            <script>
+                                function printContent(elementId) {
+                                    var printContent = document.getElementById(elementId).innerHTML;
+                                    var originalContent = document.body.innerHTML;
+
+                                    document.body.innerHTML = printContent;
+                                    window.print();
+
+                                    document.body.innerHTML = originalContent;
+                                }
+
+                                // JavaScript function for printing from selected row
+                                function printRow(rowId) {
+                                    var modalId = 'printModal' + rowId;
+                                    $('#' + modalId).modal('show');
+                                }
+                            </script>
                         </tr>
                     <?php } ?>
                 </tbody>
