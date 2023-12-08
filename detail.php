@@ -15,26 +15,18 @@ if (isset($_POST['save'])){
     if (!empty($idPeriksa)){
         if (!empty($idObat)){
             $queriduplikat = mysqli_query($mysqli, "SELECT * FROM detailtransaksi 
-                WHERE id_periksa=$idPeriksa AND id_obat=$idObat");
+                WHERE id_periksa=$idPeriksa");
             if ($queriduplikat->num_rows > 0){
                 echo "<script>alert('Maaf Data Detail itu sudah ada!')</script>";
             } else{
-                if (!empty($_POST['id'])){
-                    $id_baru = $_POST['id'];
-                    $queri1 = mysqli_query($mysqli, "UPDATE detailtransaksi SET 
-                        id_periksa='$idPeriksa',
-                        id_obat='$idObat' WHERE id='$id_baru'");
-                    echo "<script>alert('Selamat, Anda berhasil merubah data Detail!');
-                        window.location.href = 'detail.php';
-                            </script>";
-                } else {
+                foreach ($idObat as $obatId) {
                     $queri2 = mysqli_query($mysqli, "INSERT INTO 
                         detailtransaksi(id_periksa,id_obat) VALUES(
-                            '$idPeriksa','$idObat')");
-                    echo "<script>alert('Selamat, Anda berhasil menambah data Detail!');
-                        window.location.href = 'detail.php';
-                            </script>";
+                            '$idPeriksa','$obatId')");
                 }
+                echo "<script>alert('Selamat, Anda berhasil menambah data Detail!');
+                    window.location.href = 'detail.php';
+                        </script>";
             }
         } else{
             echo "<script>alert('Silakan oilih data Dokter!')</script>";
@@ -49,7 +41,7 @@ if (isset($_GET['aksi'])){
     $id=$_GET['id'];
     if ($aksi == 'hapus'){
         $queri3 = mysqli_query($mysqli, "DELETE FROM detailtransaksi 
-            WHERE id='$id'");
+            WHERE id_periksa='$id'");
         echo "<script>alert('Selamat, Anda berhasil menghapus data Detail!');
             window.location.href = 'detail.php';
                 </script>";
@@ -123,34 +115,6 @@ if (isset($_GET['aksi'])){
             <?php } ?></h2>
         <h4 class="text-center mb-4" id="header">Form Detail Pemeriksaan</h4>
         <form class="form-floating" method="POST" action="" name="myForm">
-            <?php 
-                $pasien = '';
-                $dokter = '';
-                $tgl_periksa = '';
-                $catatan = '';
-                $biaya_periksa= '';
-                $obat= '';
-                if (isset($_GET['id'])){
-                    $id=$_GET['id'];
-                    $queri = mysqli_query($mysqli, 
-                        "SELECT periksa.*, pasien.nama as pasien, dokter.nama as dokter, obat.*
-                        FROM dokter
-                        JOIN periksa ON dokter.id = periksa.id_dokter
-                        JOIN pasien ON pasien.id = periksa.id_pasien
-                        JOIN detailtransaksi ON periksa.id = detailtransaksi.id_periksa
-                        JOIN obat ON obat.id = detailtransaksi.id_obat
-                        WHERE detailtransaksi.id='$id'");
-                    while ($row = mysqli_fetch_array($queri)){
-                        $dokter = $row['dokter'];
-                        $pasien = $row['pasien'];
-                        $tgl_periksa = $row['tgl_periksa'];
-                        $catatan = $row['catatan'];
-                        $biaya_periksa = $row['biaya_periksa'];
-                        $obat =$row['namaobat'];
-                    }?>
-                    <input type="hidden" name="id" value="<?php echo $id ?>">
-                    <?php 
-            }?>
             <div class="form-floating mb-3">
                 <select class="form-control" id="idPeriksaSelect" name="idPeriksa">
                     <?php 
@@ -194,12 +158,12 @@ if (isset($_GET['aksi'])){
                 </div>
             </div>
             <div class="form-floating mb-3">
-                <select class="form-control" id="floatingInput" name="idObat">
+                <select class="form-control" id="floatingInput" name="idObat[]">
                     <?php 
                     $select='';
                     $queriObat=mysqli_query($mysqli, "SELECT * FROM obat ORDER BY namaobat ASC");
                     while ($rowObat=mysqli_fetch_array($queriObat)){
-                        $select = ($rowObat['namaobat'] == $obat) ? 'selected' : '';
+                        $select = (in_array($rowObat['namaobat'], (array)$obat)) ? 'selected' : '';
                         ?>
                         <option value="<?php echo $rowObat['id'] ?>" <?php echo $select?>>
                             <?php echo $rowObat['namaobat']?>
@@ -208,6 +172,7 @@ if (isset($_GET['aksi'])){
                 </select>
                 <label for="floatingInput">Nama Obat</label>
             </div>
+            <button type="button" class="btn btn-secondary" onclick="addDrugInput()">Tambah Obat</button>
             <button type="submit" class="btn btn-primary rounded-pill px-3" name="save">Simpan</button>
         </form>
 
@@ -256,9 +221,9 @@ if (isset($_GET['aksi'])){
                             <td class="text-center"><?php echo $total ?></td>
                             <td class="text-center">
                                 <a class="btn btn-info rounded-pill px-3" 
-                                    href="detail.php?id=<?php echo $row4['detailid'] ?>">Ubah</a>
+                                    href="detail.php?id=<?php echo $row4['id'] ?>">Ubah</a>
                                 <a class="btn btn-danger rounded-pill px-3" 
-                                    href="detail.php?id=<?php echo $row4['detailid']?>&aksi=hapus">Hapus</a>
+                                    href="detail.php?id=<?php echo $row4['id']?>&aksi=hapus">Hapus</a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -324,6 +289,16 @@ if (isset($_GET['aksi'])){
                 div.style.display = 'none';
             }
         });
+    </script>
+    <script>
+        function addDrugInput() {
+            var selectContainer = document.getElementById('floatingInput');
+            var newSelect = selectContainer.cloneNode(true);
+            newSelect.selectedIndex = 0;  // Reset selection for the new input
+
+            // Append the new drug input to the form
+            selectContainer.parentNode.appendChild(newSelect);
+        }
     </script>
 </body>
 </html>
