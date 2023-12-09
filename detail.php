@@ -58,6 +58,7 @@ if (isset($_GET['aksi'])){
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/modal.css">
 </head>
 <body data-bs-theme="light">
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -180,7 +181,8 @@ if (isset($_GET['aksi'])){
         <?php 
         $i = 1;
         $queri4 = mysqli_query($mysqli, 
-            "SELECT periksa.*, pasien.nama as pasien, dokter.nama as dokter, GROUP_CONCAT(obat.namaobat) as obat, GROUP_CONCAT(obat.harga) as harga
+            "SELECT periksa.*, pasien.nama as pasien, dokter.nama as dokter, 
+                GROUP_CONCAT(obat.namaobat) as obat, GROUP_CONCAT(obat.harga) as harga
             FROM dokter
             JOIN periksa ON dokter.id = periksa.id_dokter
             JOIN pasien ON pasien.id = periksa.id_pasien
@@ -224,61 +226,146 @@ if (isset($_GET['aksi'])){
                                 <button class="btn btn-info rounded-pill px-3" onclick="printRow(<?php echo $row4['id']; ?>)">Print</button>
                                 <a class="btn btn-danger rounded-pill px-3" href="detail.php?id=<?php echo $row4['id']?>&aksi=hapus">Hapus</a>
                             </td>
-
-                            <!-- Add a modal for displaying the print content -->
-                            <div class="modal fade" id="printModal<?php echo $row4['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="printModalLabel">Print Preview</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <!-- Content to be printed -->
-                                            <h4>Detail Pemeriksaan</h4>
-                                            <p>Pasien: <?php echo $row4['pasien']; ?></p>
-                                            <p>Dokter: <?php echo $row4['dokter']; ?></p>
-                                            <!-- Add more details as needed -->
-
-                                            <!-- Print button inside the modal -->
-                                            <button class="btn btn-info" onclick="printContent('printContent<?php echo $row4['id']; ?>')">Print</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Add a hidden div to store the content to be printed -->
-                            <div id="printContent<?php echo $row4['id']; ?>" style="display: none;">
-                                <h4>Detail Pemeriksaan</h4>
-                                <p>Pasien: <?php echo $row4['pasien']; ?></p>
-                                <p>Dokter: <?php echo $row4['dokter']; ?></p>
-                                <!-- Add more details as needed -->
-                            </div>
-
-                            <!-- JavaScript function for printing content -->
-                            <script>
-                                function printContent(elementId) {
-                                    var printContent = document.getElementById(elementId).innerHTML;
-                                    var originalContent = document.body.innerHTML;
-
-                                    document.body.innerHTML = printContent;
-                                    window.print();
-
-                                    document.body.innerHTML = originalContent;
-                                }
-
-                                // JavaScript function for printing from selected row
-                                function printRow(rowId) {
-                                    var modalId = 'printModal' + rowId;
-                                    $('#' + modalId).modal('show');
-                                }
-                            </script>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
+
+            <?php while ($row4 = mysqli_fetch_array($queri4)) { ?>
+                <div id="printContent<?php echo $row4['id']; ?>" style="display: none;">
+                    <h4>Detail Pemeriksaan</h4>
+                    <p>Pasien: <?php echo $row4['pasien']; ?></p>
+                    <p>Dokter: <?php echo $row4['dokter']; ?></p>
+                </div>
+            <?php } ?>
+
+            <?php $queri4->data_seek(0); ?>
+            <?php while ($row4 = mysqli_fetch_array($queri4)) { 
+                $subtotal = array_sum(explode(',', $row4['harga']));
+                $total = $row4['biaya_periksa'] + $subtotal;
+                $obatList = array_unique(explode(',', $row4['obat']));?>
+                <div class="modal fade" id="printModal<?php echo $row4['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="printModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="printModalLabel">Print Preview</h5>
+                                <button type="button" class="close" onclick="closeModal('<?php echo $row4['id'] ?>')" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <header class="clearfix print-header">
+                                    <div id="logo">
+                                        <img src="img/Profil.png">
+                                    </div>
+                                    <h1 class="print-h1">Detail Transaksi Pemeriksaan</h1>
+                                    <div id="company" class="clearfix">
+                                        <div>Poliklinik Afif</div>
+                                        <div>455 Foggy Heights,<br /> AZ 85004, US</div>
+                                        <div>(602) 519-0450</div>
+                                    </div>
+                                    <div id="project">
+                                        <div><span>PASIEN</span> <?php echo $row4['pasien'] ?></div>
+                                        <div><span>DOKTER</span> <?php echo $row4['dokter'] ?></div>
+                                        <div><span>TANGGAL</span> <?php echo $row4['tgl_periksa'] ?></div>
+                                        <div><span>CATATAN</span> <?php echo $row4['catatan'] ?></div>
+                                    </div>
+                                </header>
+                                <table class="print-table">
+                                    <thead>
+                                    <tr>
+                                        <th class="service">NAMA OBAT</th>
+                                        <th class="desc">KEMASAN</th>
+                                        <th>HARGA</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($obatList as $obat) {
+                                            $queri5=mysqli_query($mysqli, "SELECT * FROM obat WHERE namaobat='$obat'");
+                                            $row5=mysqli_fetch_array($queri5);?>
+                                            <tr>
+                                                <td class="service"><?php echo $obat ?></td>
+                                                <td class="desc"><?php echo $row5['kemasan'] ?></td>
+                                                <td class="total">Rp <?php echo $row5['harga'] ?></td>
+                                            </tr>
+                                        <?php }?>
+                                        <tr>
+                                            <td colspan="2">SUBTOTAL</td>
+                                            <td class="total">Rp <?php echo $subtotal ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2">BIAYA PERIKSA</td>
+                                            <td class="total">Rp <?php echo $row4['biaya_periksa']?></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="grand total">GRAND TOTAL</td>
+                                            <td class="grand total">Rp <?php echo $total ?></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button class="btn btn-info" onclick="printContent('printContent<?php echo $row4['id']; ?>')">Print</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="printContent<?php echo $row4['id']; ?>" style="display: none;">
+                    <div class="modal-body">
+                        <header class="clearfix print-header">
+                            <div id="logo">
+                                <img src="img/Profil.png">
+                            </div>
+                            <h1 class="print-h1">Detail Transaksi Pemeriksaan</h1>
+                            <div id="company" class="clearfix">
+                                <div>Poliklinik Afif</div>
+                                <div>455 Foggy Heights,<br /> AZ 85004, US</div>
+                                <div>(602) 519-0450</div>
+                            </div>
+                            <div id="project">
+                                <div><span>PASIEN</span> <?php echo $row4['pasien'] ?></div>
+                                <div><span>DOKTER</span> <?php echo $row4['dokter'] ?></div>
+                                <div><span>TANGGAL</span> <?php echo $row4['tgl_periksa'] ?></div>
+                                <div><span>CATATAN</span> <?php echo $row4['catatan'] ?></div>
+                            </div>
+                        </header>
+                        <table class="print-table">
+                            <thead>
+                            <tr>
+                                <th class="service">NAMA OBAT</th>
+                                <th class="desc">KEMASAN</th>
+                                <th>HARGA</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($obatList as $obat) {
+                                    $queri5=mysqli_query($mysqli, "SELECT * FROM obat WHERE namaobat='$obat'");
+                                    $row5=mysqli_fetch_array($queri5);?>
+                                    <tr>
+                                        <td class="service"><?php echo $obat ?></td>
+                                        <td class="desc"><?php echo $row5['kemasan'] ?></td>
+                                        <td class="total">Rp <?php echo $row5['harga'] ?></td>
+                                    </tr>
+                                <?php }?>
+                                <tr>
+                                    <td colspan="2">SUBTOTAL</td>
+                                    <td class="total">Rp <?php echo $subtotal ?></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">BIAYA PERIKSA</td>
+                                    <td class="total">Rp <?php echo $row4['biaya_periksa']?></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="grand total">GRAND TOTAL</td>
+                                    <td class="grand total">Rp <?php echo $total ?></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php } ?>
         <?php 
         } else {?>
             <h5 class="text-center mb-4"> Tabel Detail Pemeriksaan Masih Kosong, Silahkan Isi Terlebih Dahulu</h5>
@@ -291,28 +378,28 @@ if (isset($_GET['aksi'])){
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="js/main.js"></script>
     <script>
-    $(document).ready(function () {
-        var tinggiHeader = $('#header').outerHeight();
-        function isHeaderVisible() {
-            var jendelaAtas = $(window).scrollTop();
-            return jendelaAtas > tinggiHeader;
-        }
-        function toggleScrollToTopButton() {
-            if (isHeaderVisible()) {
-                $('#scrollToTopButton').fadeIn();
-            } else {
-                $('#scrollToTopButton').fadeOut();
+        $(document).ready(function () {
+            var tinggiHeader = $('#header').outerHeight();
+            function isHeaderVisible() {
+                var jendelaAtas = $(window).scrollTop();
+                return jendelaAtas > tinggiHeader;
             }
-        }
+            function toggleScrollToTopButton() {
+                if (isHeaderVisible()) {
+                    $('#scrollToTopButton').fadeIn();
+                } else {
+                    $('#scrollToTopButton').fadeOut();
+                }
+            }
 
-        $(window).on('scroll resize', toggleScrollToTopButton);
-        toggleScrollToTopButton();
-        
-        $('#scrollToTopButton').click(function () {
-            $('html, body').animate({ scrollTop: 0 }, 800);
-            return false;
+            $(window).on('scroll resize', toggleScrollToTopButton);
+            toggleScrollToTopButton();
+            
+            $('#scrollToTopButton').click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 800);
+                return false;
+            });
         });
-    });
     </script>
     <script>
         document.getElementById('idPeriksaSelect').addEventListener('change', function() {
@@ -344,10 +431,27 @@ if (isset($_GET['aksi'])){
         function addDrugInput() {
             var selectContainer = document.getElementById('floatingInput');
             var newSelect = selectContainer.cloneNode(true);
-            newSelect.selectedIndex = 0;  // Reset selection for the new input
+            newSelect.selectedIndex = 0;
 
-            // Append the new drug input to the form
             selectContainer.parentNode.appendChild(newSelect);
+        }
+    </script>
+    <script>
+        function printContent(elementId) {
+            var printContent = document.getElementById(elementId).innerHTML;
+            var originalContent = document.body.innerHTML;
+
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+        }
+
+        function printRow(modalId) {
+            $('#printModal' + modalId).modal('show');
+        }
+
+        function closeModal(modalId) {
+            $('#printModal' + modalId).modal('hide');
         }
     </script>
 </body>

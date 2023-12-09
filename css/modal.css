@@ -1,0 +1,99 @@
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.print-a {
+    text-decoration: underline;
+}
+
+.print-header {
+    padding: 10px 0;
+    margin-bottom: 30px;
+}
+
+#logo {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+#logo img {
+    width: 90px;
+}
+
+.print-h1 {
+    border-top: 1px solid  #5D6975;
+    border-bottom: 1px solid  #5D6975;
+    font-size: 2.4em;
+    line-height: 1.4em;
+    font-weight: normal;
+    text-align: center;
+    margin: 0 0 20px 0;
+}
+
+#project {
+    float: left;
+}
+
+#project span {
+    text-align: right;
+    width: 52px;
+    margin-right: 10px;
+    display: inline-block;
+    font-size: 0.8em;
+}
+
+#company {
+    float: right;
+    text-align: right;
+}
+
+#project div,
+#company div {
+    white-space: nowrap;        
+}
+
+.print-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    margin-bottom: 20px;
+}
+
+.print-table th,
+.print-table td {
+    text-align: center;
+}
+
+.print-table th {
+    padding: 5px 20px;
+    border-bottom: 1px solid #C1CED9;
+    white-space: nowrap;        
+    font-weight: normal;
+}
+
+.print-table .service,
+.print-table .desc {
+    text-align: left;
+}
+
+.print-table td {
+    padding: 20px;
+    text-align: right;
+}
+
+.print-table td.service,
+.print-table td.desc {
+    vertical-align: top;
+}
+
+.print-table td.unit,
+.print-table td.qty,
+.print-table td.total {
+    font-size: 1.2em;
+}
+
+.print-table td.grand {
+    border-top: 1px solid #5D6975;;
+}
